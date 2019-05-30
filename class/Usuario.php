@@ -120,6 +120,20 @@ class Usuario{
         ));
     }
 
+    //metodo para deletar dados do banco
+    public function delete(){
+        $sql = new Sql();
+        $sql->query("DELETE FROM tb_usuarios WHERE idusuario = :ID", array(
+            ':ID'=>$this->getIdusuario()
+        ));
+
+        //é necessario limpar o objeto
+        $this->setIdusuario(0);
+        $this->setDeslogin("");
+        $this->setDessenha("");
+        $this->setDtcadastro(new DateTime);
+    }
+
     public function __toString(){ //retorna a impressao na tela para o usuario
         return json_encode(array(
             "idusuario"=>$this->getIdusuario(),

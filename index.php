@@ -43,9 +43,16 @@ require_once("config.php"); //chama o arquivo config.php
 
 
 //atualizar um determinado registro no banco de dados
+//$usuario = new Usuario();
+//$usuario->loadbyId(8); //carregar algum usuario
+//$usuario->update("maria", "maria123");
+//echo $usuario;
+
+
+//deletar um usuario
 $usuario = new Usuario();
-$usuario->loadbyId(8);
-$usuario->update("maria", "maria123");
+$usuario->loadbyId(10);
+$usuario->delete();
 echo $usuario;
 
 ?>
