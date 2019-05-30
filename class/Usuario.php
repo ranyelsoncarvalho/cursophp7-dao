@@ -38,16 +38,12 @@ class Usuario{
 
     public function loadbyId($id){ //traz apenas um unico usuario do banco
         $sql = new Sql();
-        $result = $sql->select("SELECT * FROM tb_usuarios WHERE idusuario = :ID", array(
+        $results = $sql->select("SELECT * FROM tb_usuarios WHERE idusuario = :ID", array(
             ":ID"=>$id
         ));
 
-        if(count($result) > 0){ //verificar se tem algum registro na tabela
-            $row = $result[0];
-            $this->setIdusuario($row['idusuario']);
-            $this->setDeslogin($row['deslogin']);
-            $this->setDessenha($row['dessenha']);
-            $this->setDtcadastro($row['dtcadastro']); //formatar o tipo da data
+        if(count($results) > 0){ //verificar se tem algum registro na tabela
+            $this->setData($results[0]);
         }
     }
 
@@ -69,22 +65,59 @@ class Usuario{
     //metodo de login com autenticacao
     public function login($login, $password){
         $sql = new Sql();
-        $result = $sql->select("SELECT * FROM tb_usuarios WHERE deslogin = :LOGIN and dessenha = :PASSWORD", array(
+        $results = $sql->select("SELECT * FROM tb_usuarios WHERE deslogin = :LOGIN and dessenha = :PASSWORD", array(
             ":LOGIN"=>$login,
             ":PASSWORD"=>$password
         ));
 
-        if(count($result) > 0){ //verificar se tem algum registro na tabela
-            $row = $result[0];
-            $this->setIdusuario($row['idusuario']);
-            $this->setDeslogin($row['deslogin']);
-            $this->setDessenha($row['dessenha']);
-            $this->setDtcadastro($row['dtcadastro']); //formatar o tipo da data
+        if(count($results) > 0){ //verificar se tem algum registro na tabela
+            $this->setData($results[0]);
         }
         else {
             throw new Exception("Login e/ou senha inválidos");
             
         }
+    }
+
+
+    //metodo para receber os dados
+    public function setData($data){
+        $this->setIdusuario($data['idusuario']);
+        $this->setDeslogin($data['deslogin']);
+        $this->setDessenha($data['dessenha']);
+        $this->setDtcadastro($data['dtcadastro']);
+    }
+
+    //metodo para inserir dados no banco
+    public function insert(){
+
+        $sql = new Sql();
+        $results = $sql->select("CALL sp_usuarios_insert(:LOGIN, :PASSWORD)", array( //utilizando procedure, para a inserção de dados no banco
+            ':LOGIN'=>$this->getDeslogin(),
+            ':PASSWORD'=>$this->getDessenha()
+        ));
+
+        if (count($results) > 0){
+            $this->setData($results[0]);
+        }
+
+    }
+
+    public function __construct($login = "", $password = ""){ //metodo construtor, para a inserção de usuarios
+        $this->setDeslogin($login);
+        $this->setDessenha($password);
+    }
+
+    public function update($login, $password){ //atualização dos registros no banco
+        $this->setDeslogin($login);
+        $this->setDessenha($password);
+        
+        $sql = new Sql();
+        $sql->query("UPDATE tb_usuarios SET deslogin = :LOGIN, dessenha = :PASSWORD WHERE idusuario = :ID", array(
+            ':LOGIN'=>$this->getDeslogin(),
+            ':PASSWORD'=>$this->getDessenha(),
+            ':ID'=>$this->getIdusuario()
+        ));
     }
 
     public function __toString(){ //retorna a impressao na tela para o usuario

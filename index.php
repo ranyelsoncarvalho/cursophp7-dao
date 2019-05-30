@@ -24,8 +24,28 @@ require_once("config.php"); //chama o arquivo config.php
 //echo json_encode($search);
 
 //carrega um usuario usando um login e senha
+//$usuario = new Usuario();
+//$usuario->login("cicrano", "qweasd");
+//echo $usuario;
+
+
+//insercao de um novo registro
+//$aluno = new Usuario();
+//$aluno->setDeslogin("aluno");
+//$aluno->setDessenha("asdf");
+//$aluno->insert();
+//echo $aluno;
+
+//inserção utilizando o metodo construtor criado
+//$aluno = new Usuario("pedro", "qw231");
+//$aluno->insert();
+//echo $aluno;
+
+
+//atualizar um determinado registro no banco de dados
 $usuario = new Usuario();
-$usuario->login("cicrano", "qweasd");
+$usuario->loadbyId(8);
+$usuario->update("maria", "maria123");
 echo $usuario;
 
 ?>
