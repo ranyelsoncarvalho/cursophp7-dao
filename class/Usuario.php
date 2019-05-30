@@ -36,7 +36,7 @@ class Usuario{
         $this->dtcadastro = $value;
     }
 
-    public function loadbyId($id){ //funcao para selecionar os dados no banco
+    public function loadbyId($id){ //traz apenas um unico usuario do banco
         $sql = new Sql();
         $result = $sql->select("SELECT * FROM tb_usuarios WHERE idusuario = :ID", array(
             ":ID"=>$id
@@ -48,6 +48,42 @@ class Usuario{
             $this->setDeslogin($row['deslogin']);
             $this->setDessenha($row['dessenha']);
             $this->setDtcadastro($row['dtcadastro']); //formatar o tipo da data
+        }
+    }
+
+    //lista todos os usuarios cadastrados
+    public function getList(){
+        $sql = new Sql;
+        return $sql->select("SELECT * FROM tb_usuarios ORDER BY idusuario");
+    }
+
+    //metodo para buscar um usuario
+    public function search($login){
+        $sql = new Sql();
+        return $sql->select("SELECT * FROM tb_usuarios WHERE deslogin LIKE :SEARCH ORDER BY idusuario", array(
+            ':SEARCH'=>"%".$login."%"
+        ));
+
+    }
+
+    //metodo de login com autenticacao
+    public function login($login, $password){
+        $sql = new Sql();
+        $result = $sql->select("SELECT * FROM tb_usuarios WHERE deslogin = :LOGIN and dessenha = :PASSWORD", array(
+            ":LOGIN"=>$login,
+            ":PASSWORD"=>$password
+        ));
+
+        if(count($result) > 0){ //verificar se tem algum registro na tabela
+            $row = $result[0];
+            $this->setIdusuario($row['idusuario']);
+            $this->setDeslogin($row['deslogin']);
+            $this->setDessenha($row['dessenha']);
+            $this->setDtcadastro($row['dtcadastro']); //formatar o tipo da data
+        }
+        else {
+            throw new Exception("Login e/ou senha inválidos");
+            
         }
     }
 

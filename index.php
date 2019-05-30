@@ -10,10 +10,22 @@ require_once("config.php"); //chama o arquivo config.php
 
 //echo json_encode($usuarios);
 
+//carrega apenas um usuario
+//$usuario = new Usuario();
+//$usuario->loadbyId(1);
+//echo $usuario;
+
+//carrega uma lista de usuarios
+//$lista = Usuario::getList();
+//echo json_encode($lista);
+
+//carrega uma lista de usuarios, buscando pelo login
+//$search = Usuario::search("jo");
+//echo json_encode($search);
+
+//carrega um usuario usando um login e senha
 $usuario = new Usuario();
-
-$usuario->loadbyId(1);
-
+$usuario->login("cicrano", "qweasd");
 echo $usuario;
 
 ?>
