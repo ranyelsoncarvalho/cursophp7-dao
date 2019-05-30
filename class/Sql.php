@@ -12,7 +12,7 @@ class Sql extends PDO { //extende já do PDO vinculado do PHP
 
     private function setParams($statement, $parameters = array()){
         foreach ($parameters as $key => $value) { //percorrer os valores dentro do banco
-            $statement->setParam($key, $value);
+            $this->setParam($statement, $key, $value);
         }
     }
 
